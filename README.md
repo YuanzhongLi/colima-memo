@@ -45,3 +45,45 @@ $ docker buildx install
 ```bash
 BUILDKIT_COLORS="run=white:error=red:cancel=blue:warning=yellow" docker build ./
 ```
+
+## docker compose commandの使用
+Docker Compose v2以降は、`docker compose`コマンドを使用する。
+colimaではHomebrewで`docker-compose`がインストールされている場合、`docker compose`コマンドが使用できない。以下の様なエラーが発生する。
+```
+zsh: command not found: docker-compose
+```
+
+以下のコマンドで解決策を確認できる。
+```bash
+$ brew info docker-compose
+==> docker-compose: stable 2.38.1 (bottled), HEAD
+Isolated development environments using Docker
+https://docs.docker.com/compose/
+Installed
+/opt/homebrew/Cellar/docker-compose/2.36.2 (8 files, 60.3MB) *
+  Poured from bottle using the formulae.brew.sh API on 2025-05-26 at 11:58:51
+From: https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/d/docker-compose.rb
+License: Apache-2.0
+==> Dependencies
+Build: go ✘
+==> Options
+--HEAD
+	Install HEAD version
+==> Caveats
+Compose is a Docker plugin. For Docker to find the plugin, add "cliPluginsExtraDirs" to ~/.docker/config.json:
+  "cliPluginsExtraDirs": [
+      "/opt/homebrew/lib/docker/cli-plugins"
+  ]
+==> Analytics
+install: 37,650 (30 days), 98,795 (90 days), 341,597 (365 days)
+install-on-request: 37,626 (30 days), 98,724 (90 days), 341,311 (365 days)
+build-error: 55 (30 days)
+```
+この場合、以下の様に`~/.docker/config.json`に`cliPluginsExtraDirs`を追加することで解決できる。
+```json
+{
+  "cliPluginsExtraDirs": [
+    "/opt/homebrew/lib/docker/cli-plugins"
+  ]
+}
+```
